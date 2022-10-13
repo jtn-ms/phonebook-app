@@ -1,12 +1,13 @@
 import { Box, Button, Typography, InputBase } from "@mui/material";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import ContactsIcon from "@mui/icons-material/Contacts";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, alpha } from "@mui/material/styles";
 import { HBox, VBox } from "./styled";
 import ContactCard from "./ContactCard";
 import { useNavigate } from "react-router";
+import { ContactContext } from "context/ContactContext";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -21,8 +22,8 @@ const Search = styled("div")(({ theme }) => ({
   width: "100%",
   [theme.breakpoints.up("sm")]: {
     // marginLeft: theme.spacing(1),
-    width: "auto"
-  }
+    width: "auto",
+  },
 }));
 
 const SearchIconWrapper = styled("div")(({ theme }) => ({
@@ -32,7 +33,7 @@ const SearchIconWrapper = styled("div")(({ theme }) => ({
   pointerEvents: "none",
   display: "flex",
   alignItems: "center",
-  justifyContent: "center"
+  justifyContent: "center",
 }));
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
@@ -46,30 +47,31 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     [theme.breakpoints.up("sm")]: {
       width: "12ch",
       "&:focus": {
-        width: "20ch"
-      }
-    }
-  }
+        width: "20ch",
+      },
+    },
+  },
 }));
 
-const ContactCardList = ({ contacts }) => {
+const ContactCardList = () => {
   const navigate = useNavigate();
-  const [items, setItems] = useState([]);
+  const { contacts, dispatch } = useContext(ContactContext);
+  // const [items, setItems] = useState([]);
 
   const onDelete = (id) => {
-    setItems(items.filter((item) => item.id !== id));
+    // setItems(items.filter((item) => item.id !== id));
+    dispatch({ type: "REMOVE", payload: id });
   };
 
-  useEffect(() => {
-    setItems(contacts);
-  }, [contacts]);
+  // useEffect(() => {
+  // }, [contacts]);
 
   return (
     <Box>
       <HBox
         sx={{
           paddingTop: 3,
-          justifyContent: "center"
+          justifyContent: "center",
         }}
       >
         <ContactsIcon sx={{ fontSize: 40, marginRight: 2 }} />
@@ -79,7 +81,7 @@ const ContactCardList = ({ contacts }) => {
         <HBox
           sx={{
             justifyContent: "space-between",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <Typography variant="h5">Contacts</Typography>
@@ -106,12 +108,12 @@ const ContactCardList = ({ contacts }) => {
             borderTop: "1px solid #ddd",
             borderRight: "1px solid #ddd",
             borderTopLeftRadius: 1,
-            borderTopRightRadius: 1
+            borderTopRightRadius: 1,
           }}
         >
-          {items &&
-            items.length > 0 &&
-            items.map((item, idx) => (
+          {contacts &&
+            contacts.length > 0 &&
+            contacts.map((item, idx) => (
               <ContactCard key={item.id} contact={item} onDelete={onDelete} />
             ))}
         </VBox>

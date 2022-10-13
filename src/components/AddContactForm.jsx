@@ -1,21 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Button,
   IconButton,
   Stack,
   TextField,
-  Typography
+  Typography,
 } from "@mui/material";
 import { HBox, VBox } from "./styled";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useNavigate } from "react-router";
 
+import { ContactContext } from "context/ContactContext";
+
 const AddContactForm = () => {
   const navigate = useNavigate();
+  const { dispatch } = useContext(ContactContext);
   const [contact, setContact] = useState({
     firstname: "",
     lastname: "",
-    phonenumber: ""
+    phonenumber: "",
   });
 
   const onChange = (e) => {
@@ -23,7 +26,10 @@ const AddContactForm = () => {
     setContact({ ...contact, [name]: value });
   };
 
-  const onConfirm = () => {};
+  const addContact = (e) => {
+    dispatch({ type: "ADD", payload: contact });
+    navigate("/");
+  };
 
   return (
     <VBox>
@@ -35,13 +41,13 @@ const AddContactForm = () => {
       <HBox
         sx={{
           justifyContent: "center",
-          marginTop: 4
+          marginTop: 4,
         }}
       >
         <VBox
           sx={{
             padding: 1,
-            width: 300
+            width: 300,
             // border: "1px solid #ddd",
             // borderRadius: 1
           }}
@@ -83,9 +89,9 @@ const AddContactForm = () => {
             variant="contained"
             color="secondary"
             sx={{
-              mt: 1 // margin top
+              mt: 1, // margin top
             }}
-            // onClick={add}
+            onClick={addContact}
           >
             Confirm
           </Button>
