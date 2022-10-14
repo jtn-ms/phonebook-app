@@ -1,7 +1,11 @@
 import React, { useState, useContext } from "react";
 import {
   Button,
+  FormControl,
   IconButton,
+  Input,
+  InputLabel,
+  OutlinedInput,
   Stack,
   TextField,
   Typography,
@@ -11,6 +15,29 @@ import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useNavigate } from "react-router";
 
 import { ContactContext } from "context/ContactContext";
+import PropTypes from "prop-types";
+import { IMaskInput } from "react-imask";
+
+const TextMaskCustom = React.forwardRef(function TextMaskCustom(props, ref) {
+  const { onChange, ...other } = props;
+  return (
+    <IMaskInput
+      {...other}
+      mask="(#00) 000-0000"
+      definitions={{
+        "#": /[1-9]/,
+      }}
+      inputRef={ref}
+      onAccept={(value) => onChange({ target: { name: props.name, value } })}
+      overwrite
+    />
+  );
+});
+
+TextMaskCustom.propTypes = {
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 const AddContactForm = () => {
   const navigate = useNavigate();
@@ -21,12 +48,19 @@ const AddContactForm = () => {
     phonenumber: "",
   });
 
-  const onChange = (e) => {
+  const handleChange = (e) => {
     let { name, value } = e.target;
     setContact({ ...contact, [name]: value });
   };
 
   const addContact = (e) => {
+    if (
+      contact.firstname === "" ||
+      contact.lastname === "" ||
+      contact.phonenumber === ""
+    ) {
+      return;
+    }
     dispatch({ type: "ADD", payload: contact });
     navigate("/");
   };
@@ -48,8 +82,6 @@ const AddContactForm = () => {
           sx={{
             padding: 1,
             width: 300,
-            // border: "1px solid #ddd",
-            // borderRadius: 1
           }}
         >
           <Typography variant="h5" textAlign="center">
@@ -62,7 +94,7 @@ const AddContactForm = () => {
               name="firstname"
               type="text"
               placeholder="John"
-              onChange={onChange}
+              onChange={handleChange}
               // pass down to FormLabel as children
               label="First Name"
             />
@@ -70,20 +102,23 @@ const AddContactForm = () => {
               // html input attribute
               name="lastname"
               type="text"
-              placeholder="John"
-              onChange={onChange}
+              placeholder="Snow"
+              onChange={handleChange}
               // pass down to FormLabel as children
               label="Last Name"
             />
-            <TextField
-              // html input attribute
-              name="phonenumber"
-              type="text"
-              placeholder="Snow"
-              onChange={onChange}
-              // pass down to FormLabel as children
-              label="(111) 111-1111"
-            />
+            <FormControl>
+              <InputLabel htmlFor="component-outlined">Phone Number</InputLabel>
+              <OutlinedInput
+                value={contact.phonenumber}
+                onChange={handleChange}
+                name="phonenumber"
+                id="component-outlined"
+                label="Phone Number"
+                placeholder="(111) 111-1111"
+                inputComponent={TextMaskCustom}
+              />
+            </FormControl>
           </Stack>
           <Button
             variant="contained"
