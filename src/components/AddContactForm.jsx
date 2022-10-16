@@ -61,6 +61,9 @@ const AddContactForm = () => {
     ) {
       return;
     }
+    
+    if (contact.phonenumber)
+    
     dispatch({ type: "ADD", payload: contact });
     navigate("/");
   };

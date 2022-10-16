@@ -14,6 +14,7 @@ const Search = styled("div")(({ theme }) => ({
   // borderRadius: theme.shape.borderRadius,
   backgroundColor: "white",
   border: "1px solid #ddd",
+  borderRadius: "5px",
   // backgroundColor: alpha(theme.palette.common.white, 0.15),
   // "&:hover": {
   //   backgroundColor: alpha(theme.palette.common.white, 0.25)
@@ -104,17 +105,19 @@ const ContactCardList = () => {
         </Search>
         <VBox
           sx={{
-            borderLeft: "1px solid #ddd",
-            borderTop: "1px solid #ddd",
-            borderRight: "1px solid #ddd",
-            borderTopLeftRadius: 1,
-            borderTopRightRadius: 1,
+            border: "1px solid #ddd",
+            borderRadius: "5px",
           }}
         >
           {contacts &&
             contacts.length > 0 &&
             contacts.map((item, idx) => (
-              <ContactCard key={item.id} contact={item} onDelete={onDelete} />
+              <ContactCard
+                key={item.id}
+                contact={item}
+                onDelete={onDelete}
+                isLast={idx === contacts.length - 1}
+              />
             ))}
         </VBox>
       </VBox>
