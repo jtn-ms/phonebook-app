@@ -23,7 +23,8 @@ const TextMaskCustom = React.forwardRef(function TextMaskCustom(props, ref) {
   return (
     <IMaskInput
       {...other}
-      mask="(#00) 000-0000"
+      // mask="(#00) 000-0000"
+      mask="000-000-0000"
       definitions={{
         "#": /[1-9]/,
       }}
@@ -61,10 +62,8 @@ const AddContactForm = () => {
     ) {
       return;
     }
-    
-    if (contact.phonenumber)
-    
-    dispatch({ type: "ADD", payload: contact });
+
+    if (contact.phonenumber) dispatch({ type: "ADD", payload: contact });
     navigate("/");
   };
 
